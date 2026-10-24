@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Trueka.Api/Trueka.Api.csproj" />
+  <Project Path="Trueka.Entities/Trueka.Entities.csproj" />
+  <Project Path="Trueka.Repositories/Trueka.Repositories.csproj" />
+  <Project Path="Trueka.Services/Trueka.Services.csproj" />
+</Solution>
