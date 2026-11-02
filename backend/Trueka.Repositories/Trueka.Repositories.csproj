@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.32" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Trueka.Entities\Trueka.Entities.csproj" />
   </ItemGroup>
 
