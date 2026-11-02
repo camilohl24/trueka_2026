@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Trueka.Repositories.Data;
+using Trueka.Repositories.Implementations;
+using Trueka.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<TruekaDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IOfferRepository, OfferRepository>();
+builder.Services.AddScoped<IItemRepository, ItemRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
