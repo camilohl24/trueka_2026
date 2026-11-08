@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Trueka.Repositories.Data;
 using Trueka.Repositories.Implementations;
 using Trueka.Repositories.Interfaces;
+using Trueka.Services.Implementations;
+using Trueka.Services.Interfaces;
+using Trueka.Services.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,10 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IOfferRepository, OfferRepository>();
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
+
+builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+builder.Services.AddScoped<IOfferService, OfferService>();
+
 
 var app = builder.Build();
 

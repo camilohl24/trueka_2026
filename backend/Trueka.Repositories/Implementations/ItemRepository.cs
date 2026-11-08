@@ -11,20 +11,38 @@ public class ItemRepository : GenericRepository<Item>, IItemRepository
     {
     }
 
-    public async Task<IEnumerable<Item>> GetByOwnerAsync(string ownerId)
+    public async Task<IEnumerable<Item>> GetAllWithDetailsAsync()
         => await _dbSet
-            .Where(i => i.OwnerId == ownerId && i.IsActive)
+            .Where(i => i.IsActive)
             .Include(i => i.Category)
-            .OrderByDescending(i => i.CreatedDate)
-            .AsNoTracking()
-            .ToListAsync();
-    public async Task<IEnumerable<Item>> GetByCategoryAsync(int categoryId)
-        => await _dbSet
-            .Where(i => i.CategoryId == categoryId && i.IsActive)
             .Include(i => i.Owner)
             .OrderByDescending(i => i.CreatedDate)
             .AsNoTracking()
             .ToListAsync();
 
+    public async Task<Item?> GetByIdWithDetailsAsync(int id)
+        => await _dbSet
+            .Where(i => i.Id == id && i.IsActive)
+            .Include(i => i.Category)
+            .Include(i => i.Owner)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
 
+    public async Task<IEnumerable<Item>> GetByOwnerAsync(string ownerId)
+        => await _dbSet
+            .Where(i => i.OwnerId == ownerId && i.IsActive)
+            .Include(i => i.Category)
+            .Include(i => i.Owner)
+            .OrderByDescending(i => i.CreatedDate)
+            .AsNoTracking()
+            .ToListAsync();
+
+    public async Task<IEnumerable<Item>> GetByCategoryAsync(int categoryId)
+        => await _dbSet
+            .Where(i => i.CategoryId == categoryId && i.IsActive)
+            .Include(i => i.Category)
+            .Include(i => i.Owner)
+            .OrderByDescending(i => i.CreatedDate)
+            .AsNoTracking()
+            .ToListAsync();
 }

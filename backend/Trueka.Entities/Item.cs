@@ -12,6 +12,8 @@ public class Item : AuditableEntity
     [MaxLength(500)]
     public string Description { get; set; } = null!;
     public ItemCondition Condition { get; set; }
+    [MaxLength(500)]
+    public string? ImageUrl { get; set; }
     public int CategoryId { get; set; }
     public Category Category { get; set; } = null!;
     public string OwnerId { get; set; } = null!;

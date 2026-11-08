@@ -5,6 +5,7 @@ using Trueka.Repositories.Interfaces;
 using Trueka.Services.DTOs;
 using Trueka.Services.Interfaces;
 
+
 namespace Trueka.Services.Implementations;
 
 public class OfferService : IOfferService
