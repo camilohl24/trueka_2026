@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Trueka.Entities;
 using Trueka.Repositories.Data;
 using Trueka.Repositories.Implementations;
 using Trueka.Repositories.Interfaces;
@@ -16,14 +17,19 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<TruekaDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddIdentityCore<AppUser>()
+    .AddEntityFrameworkStores<TruekaDbContext>();
+
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IOfferRepository, OfferRepository>();
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
-
+builder.Services.AddScoped<IProfileService, ProfileService>();
 
 var app = builder.Build();
 

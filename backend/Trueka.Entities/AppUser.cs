@@ -9,5 +9,9 @@ public class AppUser : IdentityUser
     public string FullName { get; set; } = null!;
     public ICollection<Item> Items { get; set; } = new List<Item>();
     public ICollection<Offer> Offers { get; set; } = new List<Offer>();
+    [MaxLength(500)]
+    public string? ImageUrl { get; set; }
+    [MaxLength(100)]
+    public string City { get; set; }
 
 }

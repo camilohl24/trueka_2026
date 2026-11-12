@@ -15,6 +15,9 @@ public class MappingProfile : Profile
         CreateMap<Item, ItemDetailDto>();
         CreateMap<Item, ItemFormDto>();
         CreateMap<ItemFormDto, Item>();
+        CreateMap<AppUser, ProfileDto>();
+        CreateMap<AppUser, ProfileFormDto>();
+        CreateMap<ProfileFormDto, AppUser>();
 
     }
 }
