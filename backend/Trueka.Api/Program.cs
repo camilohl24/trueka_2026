@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Trueka.Api.Middleware;
 using Trueka.Entities;
 using Trueka.Repositories.Data;
 using Trueka.Repositories.Implementations;
@@ -11,7 +12,6 @@ using Trueka.Services.Helpers;
 using Trueka.Services.Implementations;
 using Trueka.Services.Interfaces;
 using Trueka.Services.Mapping;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -78,6 +78,8 @@ builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
@@ -87,6 +89,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
