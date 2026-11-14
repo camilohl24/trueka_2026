@@ -12,6 +12,6 @@ public class AppUser : IdentityUser
     [MaxLength(500)]
     public string? ImageUrl { get; set; }
     [MaxLength(100)]
-    public string City { get; set; }
+    public string? City { get; set; }
 
 }
