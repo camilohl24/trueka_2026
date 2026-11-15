@@ -35,7 +35,7 @@ public class AuthService : IAuthService
             throw new InvalidOperationException(
                 string.Join(", ", result.Errors.Select(e => e.Description)));
         }
-        return BuildResponse(user);
+        return await BuildResponseAsync(user);
     }
 
     public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
@@ -45,18 +45,22 @@ public class AuthService : IAuthService
         {
             throw new UnauthorizedAccessException("Correo electrónico o contraseña incorrectos");
         }
-        return BuildResponse(user);
+        return await BuildResponseAsync(user);
     }
 
-    private AuthResponseDto BuildResponse(AppUser user)
+    private async Task<AuthResponseDto> BuildResponseAsync(AppUser user)
     {
         var expiresAt = DateTime.UtcNow.AddMinutes(_jwt.ExpiresMinutes);
+        var roles = await _userManager.GetRolesAsync(user);
+
         var claims = new List<Claim>
-        {
-            new(ClaimTypes.NameIdentifier, user.Id),
-            new(ClaimTypes.Name, user.FullName),
-            new(ClaimTypes.Email, user.Email!)
-        };
+    {
+        new(ClaimTypes.NameIdentifier, user.Id),
+        new(ClaimTypes.Email, user.Email!),
+        new(ClaimTypes.Name, user.FullName)
+    };
+        claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -65,14 +69,15 @@ public class AuthService : IAuthService
             audience: _jwt.Audience,
             claims: claims,
             expires: expiresAt,
-            signingCredentials: credentials
-        );
+            signingCredentials: credentials);
+
         return new AuthResponseDto
         {
             Token = new JwtSecurityTokenHandler().WriteToken(token),
             ExpiresAt = expiresAt,
             UserId = user.Id,
-            FullName = user.FullName
+            FullName = user.FullName,
+            Roles = roles
         };
     }
 

@@ -22,7 +22,7 @@ public class CategoryController : ControllerBase
         => Ok(await _categoryService.GetAllAsync());
 
     [HttpGet("{id:int}")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<CategoryFormDto>> GetForEdit(int id)
     {
         var category = await _categoryService.GetForEditAsync(id);
@@ -30,7 +30,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create(CategoryFormDto dto)
     {
         dto.Id = 0;
@@ -39,7 +39,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Update(int id, CategoryFormDto dto)
     {
         if (id != dto.Id)
@@ -50,7 +50,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Deactivate(int id)
     {
         await _categoryService.DeactivateAsync(id);

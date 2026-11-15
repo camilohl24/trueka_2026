@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -12,8 +13,8 @@ using Trueka.Services.Helpers;
 using Trueka.Services.Implementations;
 using Trueka.Services.Interfaces;
 using Trueka.Services.Mapping;
-var builder = WebApplication.CreateBuilder(args);
 
+var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers()
@@ -50,8 +51,12 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddDbContext<TruekaDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddIdentityCore<AppUser>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<TruekaDbContext>();
+
+
 var jwtSection = builder.Configuration.GetSection("Jwt");
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -83,8 +88,25 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularDev", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    await DbSeeder.SeedAsync(
+        scope.ServiceProvider,
+        builder.Configuration["Admin:Email"],
+        builder.Configuration["Admin:Password"]);
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -94,6 +116,7 @@ if (app.Environment.IsDevelopment())
 app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
+app.UseCors("AngularDev");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
