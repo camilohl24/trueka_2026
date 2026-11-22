@@ -1,2 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #0466c8;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+app-navbar,
+app-footer,
+app-hero,
+app-category-list,
+app-recent-items {
+  display: block;
+}

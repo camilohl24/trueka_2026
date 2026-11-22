@@ -10,5 +10,7 @@ namespace Trueka.Services.DTOs
         public string CategoryName { get; set; } = null!;
         public string OwnerId { get; set; } = null!;
         public bool IsActive { get; set; }
+        public string OwnerFullName { get; set; } = null!;
+        public string? ImageUrl { get; set; }
     }
 }
